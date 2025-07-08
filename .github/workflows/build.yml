@@ -1,0 +1,36 @@
+name: Build .exe and publish
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - name: Cloner le repo
+      uses: actions/checkout@v3
+
+    - name: Configurer Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.12'
+
+    - name: Installer les dépendances
+      run: |
+        pip install -r requirements.txt
+        pip install pyinstaller
+
+    - name: Compiler le .exe
+      run: |
+        pyinstaller --onefile modelpython.py
+
+    - name: Publier dans Releases
+      uses: softprops/action-gh-release@v1
+      with:
+        tag_name: v${{ github.run_number }}
+        files: dist/modelpython.exe
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
