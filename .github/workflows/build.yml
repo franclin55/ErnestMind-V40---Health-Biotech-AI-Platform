@@ -27,10 +27,8 @@ jobs:
       run: |
         pyinstaller --onefile modelpython.py
 
-    - name: Publier dans Releases
-      uses: softprops/action-gh-release@v1
+    - name: Créer une Release + publier .exe
+      uses: ncipollo/release-action@v1
       with:
-        tag_name: v${{ github.run_number }}
-        files: dist/modelpython.exe
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        artifacts: dist/modelpython.exe
+        tag: v${{ github.run_number }}
